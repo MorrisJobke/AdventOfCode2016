@@ -53,7 +53,58 @@ def get_code(instructions):
         button = get_button(button, instruction)
         print(button)
 
+keypad = [
+    [None, None, None, None, None, None, None],
+    [None, None, None,  'D', None, None, None],
+    [None, None,  'A',  'B',  'C', None, None],
+    [None,  '5',  '6',  '7',  '8',  '9', None],
+    [None, None,  '2',  '3',  '4', None, None],
+    [None, None, None,  '1', None, None, None],
+    [None, None, None, None, None, None, None],
+]
 
+def get_next_button_v2(button, instruction):
+    if instruction == 'U'and keypad[button[0] + 1][button[1]] != None:
+        return (button[0] + 1, button[1])
+    if instruction == 'L' and keypad[button[0]][button[1] - 1] != None:
+        return (button[0], button[1] - 1)
+    if instruction == 'D' and keypad[button[0] - 1][button[1]] != None:
+        return (button[0] - 1, button[1])
+    if instruction == 'R' and keypad[button[0]][button[1] + 1] != None:
+        return (button[0], button[1] + 1)
+
+    return None
+
+
+def get_button_v2(button, instruction):
+    for i in instruction:
+        result = get_next_button_v2(button, i)
+        if result != None:
+            #print(keypad[result[0]][result[1]])
+            button = result
+    return button
+
+def get_code_v2(instructions):
+    """
+
+    >>> get_code_v2(example)
+    5
+    D
+    B
+    3
+    >>> get_code_v2(puzzle)
+    9
+    A
+    7
+    D
+    C
+    """
+
+    button = (3, 1)
+
+    for instruction in instructions.split('\n'):
+        button = get_button_v2(button, instruction)
+        print(keypad[button[0]][button[1]])
 
 
 if __name__ == "__main__":
