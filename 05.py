@@ -15,11 +15,11 @@ def hash_starts_with_5_zeros(string):
 def get_next_character(id, number):
     """
 
-    #>>> from pprint import pprint
-    #>>> pprint(get_next_character('abc', 0))
-    #(3231929, '1')
-    #>>> pprint(get_next_character('abc', 3231930))
-    #(5017308, '8')
+    >>> from pprint import pprint
+    >>> pprint(get_next_character('abc', 0))
+    (3231929, '1')
+    >>> pprint(get_next_character('abc', 3231930))
+    (5017308, '8')
     """
 
     character = hash_starts_with_5_zeros('%s%i' % (id, number))
@@ -35,7 +35,7 @@ def get_passcode(id):
     >>> print(get_passcode('abc'))
     18f47a30
     >>> print(get_passcode('ffykfhsq'))
-    18f47a30
+    c6697b55
     """
 
     number = 0
