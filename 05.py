@@ -87,7 +87,7 @@ def get_passcode_v2(id):
     """
 
     >>> print(get_passcode_v2('ffykfhsq'))
-    ac35d825
+    8c35d1ab
     """
 
     number = 0
