@@ -645,7 +645,36 @@ def decode_message(lines):
 
         result += character
 
-        print(characters)
+
+    return result
+
+def decode_message_least_common(lines):
+    """
+
+    >>> print(decode_message_least_common(example.split('\\n')))
+    advent
+    >>> print(decode_message_least_common(input.split('\\n')))
+    cnvvtafc
+    """
+
+    result = ''
+    for i in range(0, len(lines[0])):
+        characters = {}
+        for line in lines:
+            character = line[i]
+            if character not in characters:
+                characters[character] = 0
+            characters[character] += 1
+
+        min = 9999999
+        character = ''
+        for char in characters:
+            count = characters[char]
+            if count < min:
+                min = count
+                character = char
+
+        result += character
 
     return result
 
