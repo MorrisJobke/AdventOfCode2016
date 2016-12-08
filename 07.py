@@ -65,8 +65,90 @@ def supports_tls(lines):
 
     return count
 
+
+def clean(string):
+    """
+
+    >>> print(clean("dqpthtgufgzjojuvzvm[eejdhpcqyiydwod]iingwezvcbtowwzc[uzlxaqenhgsebqskn]wcucfmnlarrvdceuxqc[dkwcsxeitcobaylhbvc]klxammurpqgmpsxsr"))
+    dqpthtgufgzjojuvzvm[]iingwezvcbtowwzc[]wcucfmnlarrvdceuxqc[]klxammurpqgmpsxsr
+    """
+
+    return re.sub(r'\[[^\]]*\]', r'[]', string)
+
+def clean_inverse(string):
+    """
+
+    >>> print(clean_inverse("dqpthtgufgzjojuvzvm[eejdhpcqyiydwod]iingwezvcbtowwzc[uzlxaqenhgsebqskn]wcucfmnlarrvdceuxqc[dkwcsxeitcobaylhbvc]klxammurpqgmpsxsr"))
+    [eejdhpcqyiydwod][uzlxaqenhgsebqskn][dkwcsxeitcobaylhbvc]
+    """
+
+    string = re.sub(r'\][^\[]+\[', r'][', string)
+    string = re.sub(r'^[^\[]+\[', r'[', string)
+
+    return re.sub(r'\][^\[]+$', r']', string)
+
+def find_groups(string):
+    """
+
+    >>> print(find_groups("dqpthtgufgzjojuvzvm[eejdhpcqyiydwod]iingwezvcbtowwzc[uzlxaqenhgsebqskn]wcucfmnlarrvdceuxqc[dkwcsxeitcobaylhbvc]klxammurpqgmpsxsr"))
+    ['hth', 'ojo', 'zvz', 'ucu', 'xsx']
+    >>> print(find_groups("zazbz"))
+    ['aza', 'bzb']
+    """
+
+    cleaned = clean(string)
+
+    a = []
+    for i in range(0, len(cleaned) - 2):
+        result = re.findall(r'((.)(.)\2)', cleaned)
+
+        for r in result:
+            if r[1] != r[2]:
+                # invert group
+                tmp = r[2] + r[1] + r[2]
+                if tmp not in a:
+                    a.append(tmp)
+
+        cleaned = cleaned[1:]
+
+    return a
+
+def contains_group(string, groups):
+    cleaned = clean_inverse(string)
+
+    for group in groups:
+        if group in cleaned:
+            return True
+
+    return False
+
+
+example2 = """
+aba[bab]xyz
+xyx[xyx]xyx
+aaa[kek]eke
+zazbz[bzb]cdb"""
+
+def support_ssl(lines):
+    """
+
+    >>> print(support_ssl(example2.split('\\n')))
+    3
+    >>> print(support_ssl(open('07-01.txt', 'r').read().split('\\n')))
+    242
+    """
+
+    count = 0
+
+    for line in lines:
+        groups = find_groups(line)
+        if contains_group(line, groups):
+            count += 1
+            continue
+
+    return count
+
 if __name__ == "__main__":
     import doctest
 
     doctest.testmod()
-
